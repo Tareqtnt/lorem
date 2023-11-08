@@ -1,33 +1,40 @@
 import React, { useState } from 'react';
-import Menu from './Menu';
-import Categories from './Categories';
-import items from './data';
-const allCategories = ['all', ...new Set(items.map((item) => item.category))];
-
+import data from './data';
 function App() {
-  const [menuItems, setMenuItems] = useState(items);
-  const [categories, setCategories] = useState(allCategories);
+  const [count, setCount] = useState(0);
+  const [text, setText] = useState([]);
 
-  const filterItems = (category) => {
-    if (category === 'all') {
-      setMenuItems(items);
-      return;
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    let amount = parseInt(count);
+    if (count <= 0) {
+      amount = 1;
     }
-    const newItems = items.filter((item) => item.category === category);
-    setMenuItems(newItems);
+    if (count > 8) {
+      amount = 8;
+    }
+    setText(data.slice(0, amount));
   };
-
   return (
-    <main>
-      <section className="menu section">
-        <div className="title">
-          <h2>our menu</h2>
-          <div className="underline"></div>
-        </div>
-        <Categories categories={categories} filterItems={filterItems} />
-        <Menu items={menuItems} />
-      </section>
-    </main>
+    <section className='section-center'>
+      <h3>tired of boring lorem ipsum?</h3>
+      <form className='lorem-form' onSubmit={handleSubmit}>
+        <label htmlFor='amount'>paragraphs:</label>
+        <input
+          type='number'
+          name='amount'
+          id='amount'
+          value={count}
+          onChange={(e) => setCount(e.target.value)}
+        />
+        <button className='btn'>generate</button>
+      </form>
+      <article className='lorem-text'>
+        {text.map((item, index) => {
+          return <p key={index}>{item}</p>;
+        })}
+      </article>
+    </section>
   );
 }
 
